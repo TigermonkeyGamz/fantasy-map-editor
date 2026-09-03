@@ -3,20 +3,29 @@ import { Upload, Search, Image as ImageIcon } from "lucide-react";
 import { Asset } from "../types";
 import { uid } from "../lib/id";
 
-export default function AssetPanel({
-  assets,
-  onAdd
-}: {
+interface AssetPanelProps {
   assets: Asset[];
   onAdd: (asset: Asset) => void;
-}) {
+}
+
+export default function AssetPanel({
+  assets,
+  onAdd,
+}: AssetPanelProps) {
   const ref = useRef<HTMLInputElement>(null);
 
   function importFiles(files: FileList | null) {
     if (!files) return;
 
-    [...files].forEach(file => {
-      if (!/^image\/(png|jpeg|webp|svg\+xml)$/.test(file.type)) return;
+    Array.from(files).forEach((file) => {
+      if (
+        file.type !== "image/png" &&
+        file.type !== "image/jpeg" &&
+        file.type !== "image/webp" &&
+        file.type !== "image/svg+xml"
+      ) {
+        return;
+      }
 
       const src = URL.createObjectURL(file);
       const img = new Image();
@@ -28,7 +37,7 @@ export default function AssetPanel({
           category: "Custom",
           src,
           width: img.naturalWidth,
-          height: img.naturalHeight
+          height: img.naturalHeight,
         });
       };
 
@@ -40,11 +49,14 @@ export default function AssetPanel({
     <section className="panel-section asset-section">
       <div className="panel-heading">
         <span>Assets</span>
+
         <button
           className="mini-action"
           onClick={() => ref.current?.click()}
+          type="button"
         >
-          <Upload size={14} /> Import
+          <Upload size={14} />
+          Import
         </button>
       </div>
 
@@ -54,36 +66,42 @@ export default function AssetPanel({
         accept="image/png,image/jpeg,image/webp,image/svg+xml"
         multiple
         hidden
-        onChange={e => importFiles(e.target.files)}
+        onChange={(event) => importFiles(event.target.files)}
       />
 
       <div className="asset-search">
         <Search size={14} />
-        <input placeholder="Search assets" />
+        <input
+          type="text"
+          placeholder="Search assets"
+        />
       </div>
 
       <div className="asset-grid">
         {assets.length === 0 && (
           <div className="empty-state">
             <ImageIcon size={20} />
-            <span>Import PNG, JPG, WEBP or SVG assets.</span>
+            <span>
+              Import PNG, JPG, WEBP or SVG assets.
+            </span>
           </div>
         )}
 
-        {assets.map(a => (
+        {assets.map((asset) => (
           <button
-            key={a.id}
+            key={asset.id}
             className="asset-card"
-            title={`${a.name} — drag onto canvas`}
+            title={`${asset.name} - drag onto canvas`}
+            type="button"
             onClick={() =>
               onAdd({
-                ...a,
-                id: uid("asset-copy")
+                ...asset,
+                id: uid("asset-copy"),
               })
             }
           >
-            <img src={a.src} alt="" />
-            <span>{a.name}</span>
+            <img src={asset.src} alt="" />
+            <span>{asset.name}</span>
           </button>
         ))}
       </div>

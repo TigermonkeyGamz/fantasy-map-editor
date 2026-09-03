@@ -1,4 +1,3 @@
-```tsx
 import { useRef } from "react";
 import { Upload, Search, Image as ImageIcon } from "lucide-react";
 import { Asset } from "../types";
@@ -91,4 +90,3 @@ export default function AssetPanel({
     </section>
   );
 }
-```

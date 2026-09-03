@@ -1,4 +1,4 @@
-# WorldForge — Web Map & World Layout Editor
+# Fantasy Map Editor — Web Map & World Layout Editor
 
 A browser-based 2D world-building editor for towns, cities, game maps, terrain layouts, roads, fences, buildings, props and labels.
 
